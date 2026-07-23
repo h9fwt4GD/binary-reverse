@@ -15,7 +15,7 @@ jobs:
           cd radare2
           ./sys/ios-sdk.sh
       - name: Upload artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: radare2-ios-arm64
           path: radare2/binr/radare2/radare2
