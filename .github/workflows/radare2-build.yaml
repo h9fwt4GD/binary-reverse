@@ -7,7 +7,7 @@ jobs:
   build:
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Clone radare2
         run: git clone https://github.com/radareorg/radare2.git
       - name: Build for iOS
