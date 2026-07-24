@@ -12,23 +12,11 @@ jobs:
       - name: Clone radare2
         run: git clone https://github.com/radareorg/radare2.git
 
-      - name: Install dependencies
-        run: |
-          brew install automake autoconf libtool pkg-config
-
-      - name: Build for iOS
+      - name: Build for iOS using ios-sdk.sh
         run: |
           cd radare2
-          export SDKROOT=$(xcrun --sdk iphoneos --show-sdk-path)
-          export CC="xcrun --sdk iphoneos clang -arch arm64"
-          export CXX="xcrun --sdk iphoneos clang++ -arch arm64"
-          ./configure --host=arm64-apple-darwin \
-                      --prefix=/var/jb \
-                      --without-libuv \
-                      --without-openssl \
-                      --disable-r2pm \
-                      CC="$CC" \
-                      CXX="$CXX"
+          source sys/ios-sdk.sh -s
+          ./configure --prefix=/var/jb
           make -j$(sysctl -n hw.ncpu)
 
       - name: Upload binary
