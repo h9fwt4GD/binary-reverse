@@ -1,4 +1,4 @@
-name: Build radare2 for iOS
+name: Build radare2 for iOS (Rootless)
 
 on:
   workflow_dispatch:
@@ -8,13 +8,25 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
+
       - name: Clone radare2
         run: git clone https://github.com/radareorg/radare2.git
+
+      - name: Install dependencies
+        run: |
+          brew install automake autoconf libtool pkg-config
+
       - name: Build for iOS
         run: |
           cd radare2
-          ./sys/ios-sdk.sh
-      - name: Upload artifact
+          ./configure --host=arm64-apple-darwin \
+                      --prefix=/var/jb \
+                      --without-libuv \
+                      --without-openssl \
+                      --disable-r2pm
+          make -j$(sysctl -n hw.ncpu)
+
+      - name: Upload binary
         uses: actions/upload-artifact@v4
         with:
           name: radare2-ios-arm64
